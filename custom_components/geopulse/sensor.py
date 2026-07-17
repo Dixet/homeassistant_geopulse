@@ -17,8 +17,8 @@ class GeopulseLastReportSensor(SensorEntity):
         # Use entity's friendly name if available
         state = hass.states.get(monitored_device)
         friendly = state.name if state and state.name else device_id
-        self._attr_name = f"Geopulse {friendly} Last Report"
-        self._unique_id = f"{entry_id}_{device_id}_last_report"
+        self._attr_name = f"Geopulse {friendly} Last Reported"
+        self._unique_id = f"{entry_id}_{device_id}_last_reported"
         self._state = None
         self._unsub = None
 
@@ -50,10 +50,12 @@ class GeopulseLastReportSensor(SensorEntity):
     async def async_will_remove_from_hass(self) -> None:
         if self._unsub:
             self._unsub()
+        if getattr(self, "_unsub_legacy", None):
+            self._unsub_legacy()
 
     def _handle_signal(self, timestamp: str) -> None:
         self._state = timestamp
-        self.hass.async_add_job(self.async_write_ha_state)
+        self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):

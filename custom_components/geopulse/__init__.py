@@ -23,9 +23,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Geopulse from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
-    token = entry.data.get(CONF_TOKEN)
-    api_url = entry.data.get(CONF_API_URL)
-    monitored_device = entry.data.get(CONF_MONITORED_DEVICE)
+    token = entry.options.get(CONF_TOKEN, entry.data.get(CONF_TOKEN))
+    api_url = entry.options.get(CONF_API_URL, entry.data.get(CONF_API_URL))
+    monitored_device = entry.options.get(CONF_MONITORED_DEVICE, entry.data.get(CONF_MONITORED_DEVICE))
     session = async_get_clientsession(hass)
 
     if not token or not api_url or not monitored_device:
@@ -135,9 +135,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.debug("Platform unload failed or not forwarded")
 
     entry_data = hass.data[DOMAIN].pop(entry.entry_id, None)
-    if entry_data and entry_data.get("unsubscribe"):
-        entry_data["unsubscribe"]()
-
     if not hass.data[DOMAIN]:
         hass.data.pop(DOMAIN, None)
 
