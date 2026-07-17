@@ -1,6 +1,6 @@
 {
   "domain": "geopulse",
-  "name": "Geopulse",
+  "name": "GeoPulse",
   "documentation": "https://github.com/Dixet/homeassistant_geopulse",
   "issue_tracker": "https://github.com/Dixet/homeassistant_geopulse/issues",
   "dependencies": [],
