@@ -1,4 +1,4 @@
-"""The Geopulse integration."""
+"""The GeoPulse integration."""
 
 import logging
 
@@ -15,12 +15,12 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass, config):
-    """Set up the Geopulse component."""
+    """Set up the GeoPulse component."""
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Geopulse from a config entry."""
+    """Set up GeoPulse from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
     token = entry.options.get(CONF_TOKEN, entry.data.get(CONF_TOKEN))
@@ -29,7 +29,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     session = async_get_clientsession(hass)
 
     if not token or not api_url or not monitored_device:
-        _LOGGER.warning("Geopulse entry is missing required configuration")
+        _LOGGER.warning("GeoPulse entry is missing required configuration")
         return True
 
     # Forward setup to platforms (sensor)
@@ -102,7 +102,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             ) as response:
                 response.raise_for_status()
                 _LOGGER.debug(
-                    "Sent Geopulse location for %s to %s with status %s",
+                    "Sent GeoPulse location for %s to %s with status %s",
                     monitored_device,
                     api_url,
                     response.status,
@@ -115,7 +115,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 except Exception:
                     _LOGGER.exception("Failed to set last_report in hass.data")
         except Exception as err:  # pylint: disable=broad-except
-            _LOGGER.exception("Error calling Geopulse API: %s", err)
+            _LOGGER.exception("Error calling GeoPulse API: %s", err)
 
     unsubscribe = async_track_state_change_event(
         hass, monitored_device, _async_handle_state_change
@@ -127,7 +127,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a Geopulse config entry."""
+    """Unload a GeoPulse config entry."""
     # unload platforms
     try:
         await hass.config_entries.async_forward_entry_unload(entry, ["sensor"])

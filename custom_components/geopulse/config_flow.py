@@ -1,4 +1,4 @@
-"""Config flow for Geopulse."""
+"""Config flow for GeoPulse."""
 
 import voluptuous as vol
 
@@ -9,15 +9,15 @@ from homeassistant.helpers import selector
 from .const import CONF_API_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
 
 
-class GeopulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Geopulse."""
+class GeoPulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for GeoPulse."""
 
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
         if user_input is not None:
-            return self.async_create_entry(title="Geopulse", data=user_input)
+            return self.async_create_entry(title="GeoPulse", data=user_input)
 
         data_schema = vol.Schema(
             {
@@ -37,11 +37,11 @@ class GeopulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return GeopulseOptionsFlowHandler(config_entry)
+        return GeoPulseOptionsFlowHandler(config_entry)
 
 
-class GeopulseOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle option updates for Geopulse."""
+class GeoPulseOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle option updates for GeoPulse."""
 
     def __init__(self, config_entry):
         self._config_entry = config_entry

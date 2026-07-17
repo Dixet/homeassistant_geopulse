@@ -1,4 +1,4 @@
-# Geopulse Home Assistant Integration
+# GeoPulse Home Assistant Integration
 
 A custom Home Assistant integration for the `GeoPulse` geo tracking service. It reports monitored device location changes to GeoPulse and exposes a sensor for the last reported timestamp.
 

@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Geopulse",
-        "description": "Set up Geopulse",
+        "title": "GeoPulse",
+        "description": "Set up GeoPulse",
         "data": {
           "token": "GeoPulse token",
           "api_url": "GeoPulse API URL",

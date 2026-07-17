@@ -1,7 +1,7 @@
-"""Constants for the Geopulse integration."""
+"""Constants for the GeoPulse integration."""
 
 DOMAIN = "geopulse"
-DEFAULT_NAME = "Geopulse"
+DEFAULT_NAME = "GeoPulse"
 
 CONF_TOKEN = "token"
 CONF_API_URL = "api_url"

@@ -1,4 +1,4 @@
-"""Sensor platform for Geopulse."""
+"""Sensor platform for GeoPulse."""
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -6,7 +6,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from .const import DOMAIN, CONF_MONITORED_DEVICE
 
 
-class GeopulseLastReportSensor(SensorEntity):
+class GeoPulseLastReportSensor(SensorEntity):
     """Sensor that shows the last time location was reported."""
 
     def __init__(self, hass, entry_id, monitored_device):
@@ -17,7 +17,7 @@ class GeopulseLastReportSensor(SensorEntity):
         # Use entity's friendly name if available
         state = hass.states.get(monitored_device)
         friendly = state.name if state and state.name else device_id
-        self._attr_name = f"Geopulse {friendly} Last Reported"
+        self._attr_name = f"GeoPulse {friendly} Last Reported"
         self._unique_id = f"{entry_id}_{device_id}_last_reported"
         self._state = None
         self._unsub = None
@@ -59,11 +59,11 @@ class GeopulseLastReportSensor(SensorEntity):
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Geopulse sensors from a config entry."""
+    """Set up GeoPulse sensors from a config entry."""
     monitored_device = entry.data.get(CONF_MONITORED_DEVICE)
     if not monitored_device:
         async_add_entities([], True)
         return
 
-    sensor = GeopulseLastReportSensor(hass, entry.entry_id, monitored_device)
+    sensor = GeoPulseLastReportSensor(hass, entry.entry_id, monitored_device)
     async_add_entities([sensor], True)
