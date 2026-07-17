@@ -1,6 +1,7 @@
-# GeoPulse Home Assistant Integration
+<H3><img alt="GeoPulse icon" src="https://github.com/user-attachments/assets/90fa1384-2525-43a0-8ace-ac5194251a69" style="height: 3em; vertical-align: middle;"/>
+GeoPulse Home Assistant Integration</H3>
 
-A custom Home Assistant integration for the `GeoPulse` geo tracking service. It reports monitored device location changes to GeoPulse and exposes a sensor for the last reported timestamp.
+A custom Home Assistant integration for the [GeoPulse](https://github.com/tess1o/geopulse) geo tracking service. It reports monitored device location changes to GeoPulse and exposes a sensor for the last reported timestamp.
 
 ## Purpose
 
