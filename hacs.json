@@ -1,5 +1,6 @@
 {
   "name": "Geopulse",
   "content_in_root": false,
-  "filename": "geopulse"
+  "filename": "geopulse",
+  "render_readme": true
 }

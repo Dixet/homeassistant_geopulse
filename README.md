@@ -12,7 +12,7 @@ This integration:
 
 ## Installation
 
-To install manually:
+### Manual installation
 
 1. Copy the contents of the `custom_components` folder from this repository into your Home Assistant configuration directory.
 2. The target path should be:
@@ -22,6 +22,14 @@ To install manually:
    ```
 
 3. Restart Home Assistant.
+
+### HACS installation
+
+1. Add this repository to HACS as a custom repository.
+2. In HACS, go to **Integrations → Explore & Add Repositories** and add the repository manually if it is not already listed.
+3. Search for `GeoPulse` in HACS
+4. Install `Geopulse` from HACS.
+5. Restart Home Assistant after installation.
 
 ## Configuration
 
