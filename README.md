@@ -40,7 +40,7 @@ This integration:
    - `api_url`
    - monitored device or person entity
 
-The token entered here should be the same as the token you enter in geoPulse. ee the geoPulse documentation for more details:
+The token entered here should be the same as the token you enter in geoPulse. See the geoPulse documentation for more details:
 
 - https://geopulse.cc/docs/user-guide/gps-sources/home_assistant
 
