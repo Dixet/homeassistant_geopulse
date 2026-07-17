@@ -1,10 +1,10 @@
 {
   "domain": "geopulse",
   "name": "Geopulse",
-  "documentation": "https://example.com/",
-  "issue_tracker": "https://example.com/issues",
+  "documentation": "https://github.com/Dixet/homeassistant_geopulse",
+  "issue_tracker": "https://github.com/Dixet/homeassistant_geopulse/issues",
   "dependencies": [],
-  "codeowners": ["@yourname"],
+  "codeowners": ["@dixet"],
   "requirements": [],
   "config_flow": true,
   "iot_class": "cloud_polling",
