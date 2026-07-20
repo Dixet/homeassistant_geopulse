@@ -60,7 +60,7 @@ class GeoPulseLastReportSensor(SensorEntity):
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up GeoPulse sensors from a config entry."""
-    monitored_device = entry.data.get(CONF_MONITORED_DEVICE)
+    monitored_device = entry.options.get(CONF_MONITORED_DEVICE, entry.data.get(CONF_MONITORED_DEVICE))
     if not monitored_device:
         async_add_entities([], True)
         return

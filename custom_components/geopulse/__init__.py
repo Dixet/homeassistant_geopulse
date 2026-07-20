@@ -117,6 +117,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception as err:  # pylint: disable=broad-except
             _LOGGER.exception("Error calling GeoPulse API: %s", err)
 
+    async def _async_update_listener(hass: HomeAssistant, updated_entry: ConfigEntry) -> None:
+        """Reload config entry when options or data are updated."""
+        await hass.config_entries.async_reload(updated_entry.entry_id)
+
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+
     unsubscribe = async_track_state_change_event(
         hass, monitored_device, _async_handle_state_change
     )
