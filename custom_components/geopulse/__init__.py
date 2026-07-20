@@ -129,11 +129,35 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     api_url,
                     response.status,
                 )
-                # record last report timestamp and notify any sensors
+                # record last report timestamp and location data and notify any sensors
                 try:
                     last_ts = payload.get("timestamp")
-                    hass.data[DOMAIN].setdefault(entry.entry_id, {})["last_report"] = last_ts
-                    async_dispatcher_send(hass, f"{DOMAIN}_{entry.entry_id}_last_report", last_ts)
+                    location_data = payload.get("location", {})
+                    battery_data = payload.get("battery", {})
+                    
+                    hass.data[DOMAIN].setdefault(entry.entry_id, {})
+                    hass.data[DOMAIN][entry.entry_id]["last_report"] = last_ts
+                    hass.data[DOMAIN][entry.entry_id]["latitude"] = location_data.get("latitude")
+                    hass.data[DOMAIN][entry.entry_id]["longitude"] = location_data.get("longitude")
+                    hass.data[DOMAIN][entry.entry_id]["accuracy"] = location_data.get("accuracy")
+                    hass.data[DOMAIN][entry.entry_id]["altitude"] = location_data.get("altitude")
+                    hass.data[DOMAIN][entry.entry_id]["speed"] = location_data.get("speed")
+                    hass.data[DOMAIN][entry.entry_id]["battery"] = battery_data.get("level")
+                    
+                    # Send signal with full data
+                    async_dispatcher_send(
+                        hass, 
+                        f"{DOMAIN}_{entry.entry_id}_last_report", 
+                        {
+                            "timestamp": last_ts,
+                            "latitude": location_data.get("latitude"),
+                            "longitude": location_data.get("longitude"),
+                            "accuracy": location_data.get("accuracy"),
+                            "altitude": location_data.get("altitude"),
+                            "speed": location_data.get("speed"),
+                            "battery": battery_data.get("level")
+                        }
+                    )
                 except Exception:
                     _LOGGER.exception("Failed to set last_report in hass.data")
         except Exception as err:  # pylint: disable=broad-except
