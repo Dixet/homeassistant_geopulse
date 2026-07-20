@@ -27,6 +27,7 @@ class GeoPulseLastReportSensor(SensorEntity):
         self._speed = None
         self._battery = None
         self._unsub = None
+        self._response = None
 
     @property
     def name(self):
@@ -50,6 +51,7 @@ class GeoPulseLastReportSensor(SensorEntity):
             "altitude": self._altitude,
             "speed": self._speed,
             "battery": self._battery,
+            "response": self._response,
         }
 
     async def async_added_to_hass(self):
@@ -70,6 +72,7 @@ class GeoPulseLastReportSensor(SensorEntity):
             self._altitude = entry_data.get("altitude")
             self._speed = entry_data.get("speed")
             self._battery = entry_data.get("battery")
+            self._response = entry_data.get("response")
 
     async def async_will_remove_from_hass(self) -> None:
         if self._unsub:
@@ -87,6 +90,7 @@ class GeoPulseLastReportSensor(SensorEntity):
             self._altitude = data.get("altitude")
             self._speed = data.get("speed")
             self._battery = data.get("battery")
+            self._response = entry_data.get("response")
         else:
             # Legacy: only timestamp was sent
             self._state = data
@@ -95,7 +99,7 @@ class GeoPulseLastReportSensor(SensorEntity):
     def _handle_legacy_signal(self, timestamp: str) -> None:
         """Handle legacy signal (timestamp only)."""
         self._state = timestamp
-        self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
+         self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
