@@ -143,7 +143,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     hass.data[DOMAIN][entry.entry_id]["altitude"] = location_data.get("altitude")
                     hass.data[DOMAIN][entry.entry_id]["speed"] = location_data.get("speed")
                     hass.data[DOMAIN][entry.entry_id]["battery"] = battery_data.get("level")
-                    
+                    hass.data[DOMAIN][entry.entry_id]["response"] = response.status
                     # Send signal with full data
                     async_dispatcher_send(
                         hass, 
@@ -155,7 +155,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             "accuracy": location_data.get("accuracy"),
                             "altitude": location_data.get("altitude"),
                             "speed": location_data.get("speed"),
-                            "battery": battery_data.get("level")
+                            "battery": battery_data.get("level"),
+                            "response": response.status
                         }
                     )
                 except Exception:
