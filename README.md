@@ -42,9 +42,9 @@ This integration:
    - monitored device or person entity
 
 The token entered here should be the same as the token you enter in GeoPulse. See the GeoPulse documentation for more details:
-
 - https://geopulse.cc/docs/user-guide/gps-sources/home_assistant
 
+Please note that using a person entity will not report speed (and battery) information and is therefore less suited for logging to GeoPulse.
 
 ## Usage
 
