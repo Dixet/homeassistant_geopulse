@@ -7,7 +7,6 @@
   "codeowners": ["@dixet"],
   "requirements": [],
   "config_flow": true,
-  "config_schema": "homeassistant.helpers.config_validation.config_entry_only_config_schema",
   "iot_class": "cloud_polling",
   "integration_type": "service",
   "version": "0.1.2"
