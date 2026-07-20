@@ -99,7 +99,7 @@ class GeoPulseLastReportSensor(SensorEntity):
     def _handle_legacy_signal(self, timestamp: str) -> None:
         """Handle legacy signal (timestamp only)."""
         self._state = timestamp
-         self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
+        self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
