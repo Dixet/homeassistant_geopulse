@@ -47,28 +47,50 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         old_state = event.data.get("old_state")
         new_state = event.data.get("new_state")
-        # Only act when latitude or longitude actually changed
+
         old_lat = None
         old_lon = None
+        old_accuracy = None
+        old_altitude = None
+        old_speed = None
+        old_battery = None
         new_lat = None
         new_lon = None
+        new_accuracy = None
+        new_altitude = None
+        new_speed = None
+        new_battery = None
 
         if old_state:
             old_lat = old_state.attributes.get("latitude")
             old_lon = old_state.attributes.get("longitude")
+            old_accuracy = old_state.attributes.get("gps_accuracy")
+            old_altitude = old_state.attributes.get("altitude")
+            old_speed = old_state.attributes.get("speed")
+            old_battery = old_state.attributes.get("battery_level")
 
         if new_state:
             new_lat = new_state.attributes.get("latitude")
             new_lon = new_state.attributes.get("longitude")
+            new_accuracy = new_state.attributes.get("gps_accuracy")
+            new_altitude = new_state.attributes.get("altitude")
+            new_speed = new_state.attributes.get("speed")
+            new_battery = new_state.attributes.get("battery_level")
 
-        if old_lat == new_lat and old_lon == new_lon:
+        # only report if any of the relevant attributes have changed
+        if old_lat == new_lat and old_lon == new_lon and old_accuracy == new_accuracy and old_altitude == new_altitude and old_speed == new_speed and old_battery == new_battery:
+            return
+
+        # do not report when lat or lon is None (e.g., when device is not reporting location)
+        if new_lat is None or new_lon is None:
+            _LOGGER.debug("Skipping GeoPulse report for %s: lat or lon is None", monitored_device)
             return
 
         # Build payload according to requested schema
         device_id = monitored_device.split(".", 1)[1] if "." in monitored_device else monitored_device
 
         # Battery: prefer device attribute, fallback to sensor.<device>_battery_level, else 0
-        battery_level = new_state.attributes.get("battery_level") if new_state else None
+        battery_level = new_battery if new_battery is not None else None
         if battery_level is None:
             battery_sensor = f"sensor.{device_id}_battery_level"
             battery_state = hass.states.get(battery_sensor)
@@ -83,9 +105,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "location": {
                 "latitude": new_lat,
                 "longitude": new_lon,
-                "accuracy": new_state.attributes.get("gps_accuracy", 0) if new_state else 0,
-                "altitude": new_state.attributes.get("altitude", 0) if new_state else 0,
-                "speed": new_state.attributes.get("speed", 0) if new_state else 0,
+                "accuracy": new_accuracy if new_accuracy is not None else 0,
+                "altitude": new_altitude if new_altitude is not None else 0,
+                "speed": new_speed if new_speed is not None else 0,
             },
             "battery": {"level": battery_level},
         }
