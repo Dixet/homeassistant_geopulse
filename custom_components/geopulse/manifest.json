@@ -3,6 +3,7 @@
   "name": "GeoPulse",
   "codeowners": ["@dixet"],
   "config_flow": true,
+  "config_schema": [],
   "dependencies": [],
   "documentation": "https://github.com/Dixet/homeassistant_geopulse",
   "integration_type": "service",

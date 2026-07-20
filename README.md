@@ -13,6 +13,20 @@ This integration:
 
 ## Installation
 
+### HACS installation
+
+The easiest way to install is using the button
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dixet&repository=homeassistant_geopulse&category=integration)
+
+Or find the integration in HACS yourself:
+
+1. From the Home Assistant sidebar, select HACS. This will open the Home Assistant Community Store dashboard
+2. Select the search bar at the top of the dashboard and search for `GeoPulse`.
+3. Select `GeoPulse` and choose Download
+
+Restart Home Assistant after installation.
+
 ### Manual installation
 
 1. Copy the contents of the `custom_components` folder from this repository into your Home Assistant configuration directory.
@@ -23,14 +37,6 @@ This integration:
    ```
 
 3. Restart Home Assistant.
-
-### HACS installation
-
-1. Add this repository to HACS as a custom repository.
-2. In HACS, go to **Integrations → Explore & Add Repositories** and add the repository manually if it is not already listed.
-3. Search for `GeoPulse` in HACS
-4. Install `GeoPulse` from HACS.
-5. Restart Home Assistant after installation.
 
 ## Configuration
 
