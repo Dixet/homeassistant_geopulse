@@ -90,7 +90,7 @@ class GeoPulseLastReportSensor(SensorEntity):
             self._altitude = data.get("altitude")
             self._speed = data.get("speed")
             self._battery = data.get("battery")
-            self._response = entry_data.get("response")
+            self._response = data.get("response")
         else:
             # Legacy: only timestamp was sent
             self._state = data
