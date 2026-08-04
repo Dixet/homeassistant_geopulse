@@ -6,7 +6,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from .const import CONF_API_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
+from .const import CONF_GEOPULSE_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
 
 
 class GeoPulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -22,7 +22,7 @@ class GeoPulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         data_schema = vol.Schema(
             {
                 vol.Required(CONF_TOKEN): str,
-                vol.Required(CONF_API_URL): str,
+                vol.Required(CONF_GEOPULSE_URL): str,
                 vol.Required(CONF_MONITORED_DEVICE): selector.EntitySelector(
                     selector.EntitySelectorConfig(
                         domain=["device_tracker", "person"],
@@ -55,7 +55,7 @@ class GeoPulseOptionsFlowHandler(config_entries.OptionsFlow):
         data_schema = vol.Schema(
             {
                 vol.Required(CONF_TOKEN, default=data.get(CONF_TOKEN, "")): str,
-                vol.Required(CONF_API_URL, default=data.get(CONF_API_URL, "")): str,
+                vol.Required(CONF_GEOPULSE_URL, default=data.get(CONF_GEOPULSE_URL, "")): str,
                 vol.Required(
                     CONF_MONITORED_DEVICE,
                     default=data.get(CONF_MONITORED_DEVICE, ""),
