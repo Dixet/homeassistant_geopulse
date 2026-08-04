@@ -7,6 +7,7 @@ from aiohttp import ClientError, ClientResponseError, ClientTimeout
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import CONF_GEOPULSE_URL, DOMAIN, CONF_MONITORED_DEVICE
 
@@ -17,7 +18,7 @@ SCAN_INTERVAL = timedelta(minutes=10)
 class GeoPulseLastReportSensor(SensorEntity):
     """Sensor that shows the last time location was reported."""
 
-    def __init__(self, hass, entry_id, monitored_device):
+    def __init__(self, hass, entry_id, monitored_device, device_info=None):
         self.hass = hass
         self._entry_id = entry_id
         self._monitored_device = monitored_device
@@ -27,6 +28,7 @@ class GeoPulseLastReportSensor(SensorEntity):
         friendly = state.name if state and state.name else device_id
         self._attr_name = f"GeoPulse {friendly} Last Reported"
         self._unique_id = f"{entry_id}_{device_id}_last_reported"
+        self._attr_icon = "mdi:chart-box-plus-outline"
         self._state = None
         self._latitude = None
         self._longitude = None
@@ -36,6 +38,7 @@ class GeoPulseLastReportSensor(SensorEntity):
         self._battery = None
         self._unsub = None
         self._response = None
+        self._attr_device_info = device_info
 
     @property
     def name(self):
@@ -113,17 +116,19 @@ class GeoPulseLastReportSensor(SensorEntity):
 class GeoPulseHealthSensor(SensorEntity):
     """Sensor that shows the health status of the GeoPulse API."""
 
-    def __init__(self, hass, entry_id, api_url):
+    def __init__(self, hass, entry_id, api_url, device_info=None):
         """Initialize the sensor."""
         self.hass = hass
         self._entry_id = entry_id
         self._api_url = api_url.rstrip("/")
         self._attr_name = "GeoPulse Health"
         self._unique_id = f"{entry_id}_health"
+        self._attr_icon = "mdi:pulse"
         self._state = None
         self._message = None
         self._database = None
         self._status = None
+        self._attr_device_info = device_info
 
     @property
     def name(self):
@@ -182,15 +187,18 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Set up GeoPulse sensors from a config entry."""
     monitored_device = entry.options.get(CONF_MONITORED_DEVICE, entry.data.get(CONF_MONITORED_DEVICE))
     api_url = entry.options.get(CONF_GEOPULSE_URL, entry.data.get(CONF_GEOPULSE_URL))
+    
+    # Get device info from hass.data
+    device_info = hass.data.get(DOMAIN, {}).get(entry.entry_id, {}).get("device_info")
 
     sensors = []
 
     if monitored_device:
-        sensor = GeoPulseLastReportSensor(hass, entry.entry_id, monitored_device)
+        sensor = GeoPulseLastReportSensor(hass, entry.entry_id, monitored_device, device_info)
         sensors.append(sensor)
 
     if api_url:
-        health_sensor = GeoPulseHealthSensor(hass, entry.entry_id, api_url)
+        health_sensor = GeoPulseHealthSensor(hass, entry.entry_id, api_url, device_info)
         sensors.append(health_sensor)
 
     async_add_entities(sensors, True)

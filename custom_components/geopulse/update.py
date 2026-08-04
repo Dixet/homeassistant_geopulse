@@ -6,6 +6,7 @@ from datetime import timedelta
 from aiohttp import ClientError, ClientResponseError, ClientTimeout
 from homeassistant.components.update import UpdateEntity
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import CONF_GEOPULSE_URL, DOMAIN
 
@@ -16,7 +17,7 @@ SCAN_INTERVAL = timedelta(minutes=10)
 class GeoPulseVersionUpdate(UpdateEntity):
     """Update entity for GeoPulse version."""
 
-    def __init__(self, hass, entry_id, api_url):
+    def __init__(self, hass, entry_id, api_url, device_info=None):
         self.hass = hass
         self._entry_id = entry_id
         self._api_url = api_url.rstrip("/")
@@ -26,6 +27,7 @@ class GeoPulseVersionUpdate(UpdateEntity):
         self._latest_version = None
         self._update_available = False
         self._release_url = None
+        self._attr_device_info = device_info
 
     @property
     def name(self):
@@ -101,7 +103,10 @@ class GeoPulseVersionUpdate(UpdateEntity):
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up GeoPulse update entity from a config entry."""
     api_url = entry.options.get(CONF_GEOPULSE_URL, entry.data.get(CONF_GEOPULSE_URL))
+    
+    # Get device info from hass.data
+    device_info = hass.data.get(DOMAIN, {}).get(entry.entry_id, {}).get("device_info")
 
     if api_url:
-        update_entity = GeoPulseVersionUpdate(hass, entry.entry_id, api_url)
+        update_entity = GeoPulseVersionUpdate(hass, entry.entry_id, api_url, device_info)
         async_add_entities([update_entity], True)

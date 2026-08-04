@@ -17,7 +17,20 @@ class GeoPulseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
         if user_input is not None:
-            return self.async_create_entry(title="GeoPulse", data=user_input)
+            # Get the friendly name of the monitored device for the entry title
+            monitored_device = user_input[CONF_MONITORED_DEVICE]
+            device_id = monitored_device.split(".", 1)[1] if "." in monitored_device else monitored_device
+            
+            # Try to get the friendly name from the current state
+            hass = self.hass
+            if hass and hass.states:
+                state = hass.states.get(monitored_device)
+                device_friendly_name = state.name if state and state.name else device_id
+            else:
+                device_friendly_name = device_id
+            
+            entry_title = f"GeoPulse {device_friendly_name}"
+            return self.async_create_entry(title=entry_title, data=user_input)
 
         data_schema = vol.Schema(
             {
@@ -49,6 +62,25 @@ class GeoPulseOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
+            # If monitored device changed, update the entry title
+            new_monitored_device = user_input.get(CONF_MONITORED_DEVICE)
+            if new_monitored_device:
+                device_id = new_monitored_device.split(".", 1)[1] if "." in new_monitored_device else new_monitored_device
+                
+                # Try to get the friendly name from the current state
+                hass = self.hass
+                if hass and hass.states:
+                    state = hass.states.get(new_monitored_device)
+                    device_friendly_name = state.name if state and state.name else device_id
+                else:
+                    device_friendly_name = device_id
+                
+                new_title = f"GeoPulse {device_friendly_name}"
+                # Update the config entry title
+                self.hass.config_entries.async_update_entry(
+                    self._config_entry, title=new_title
+                )
+            
             return self.async_create_entry(title="", data=user_input)
 
         data = self._config_entry.options or self._config_entry.data
