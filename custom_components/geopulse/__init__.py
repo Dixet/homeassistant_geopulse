@@ -7,6 +7,7 @@ from homeassistant.core import Event, HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.dispatcher import async_dispatcher_send
+from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
 from homeassistant.util import dt as dt_util
 
 from .const import CONF_GEOPULSE_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
@@ -32,6 +33,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not token or not api_url or not monitored_device:
         _LOGGER.warning("GeoPulse entry is missing required configuration")
         return True
+
+    # Create device for this integration - use the same name as the entry title
+    device_id = monitored_device.split(".", 1)[1] if "." in monitored_device else monitored_device
+    state = hass.states.get(monitored_device)
+    friendly_name = state.name if state and state.name else device_id
+    device_name = f"GeoPulse {friendly_name}"
+    
+    device_info = DeviceInfo(
+        entry_type=DeviceEntryType.SERVICE,
+        identifiers={(DOMAIN, entry.entry_id)},
+        name=device_name,
+        manufacturer="GeoPulse",
+        model=f"{friendly_name} Tracker",
+    )
+    
+    hass.data[DOMAIN].setdefault(entry.entry_id, {})
+    hass.data[DOMAIN][entry.entry_id]["device_info"] = device_info
 
     # Forward setup to platforms (sensor, update)
     try:
