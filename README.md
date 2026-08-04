@@ -57,6 +57,10 @@ Please note that using a person entity will not report speed (and battery) infor
 After installation and setup:
 
 - The integration will report observed location changes for the configured monitored entity.
-- It exposes a sensor entity representing the last time GeoPulse was updated.
 - The integration can be edited from the Home Assistant UI via the integration options.
+### Exposed sensors
+-  `Last reported`: Represents the last time GeoPulse was updated.
+-  `Health`: Shows the health of the GeoPulse system (using the public /api/health endpoint)
+-  `Update`: Update entity showing the version and update information (using the public /api/version/status endpoint)
+
 

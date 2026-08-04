@@ -33,10 +33,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.warning("GeoPulse entry is missing required configuration")
         return True
 
-    # Forward setup to platforms (sensor)
+    # Forward setup to platforms (sensor, update)
     try:
         hass.async_create_task(
-            hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+            hass.config_entries.async_forward_entry_setups(entry, ["sensor", "update"])
         )
     except Exception:  # pragma: no cover - defensive
         _LOGGER.exception("Failed to forward entry setup to platforms")
