@@ -43,20 +43,22 @@ Restart Home Assistant after installation.
 1. In Home Assistant, go to **Settings → Devices & Services → Add Integration**.
 2. Search for `GeoPulse` and follow the setup flow.
 3. Provide the required values:
-   - `token` 
-   - `api_url`
-   - monitored device or person entity
+   - `token`: The token entered here should be the same as the token you enter in GeoPulse. See the GeoPulse documentation for more details: https://geopulse.cc/docs/user-guide/gps-sources/home_assistant
+   - `Geopulse URL`: the base URL of your GeoPulse instance (eg. https://geopulse.mydomain.com, not https://geopulse.mydomain.com/api/homeassistant)
+   - `device or entity`: Select the monitored device or person entity.
 
-The token entered here should be the same as the token you enter in GeoPulse. See the GeoPulse documentation for more details:
-- https://geopulse.cc/docs/user-guide/gps-sources/home_assistant
-
-Please note that using a person entity will not report speed (and battery) information and is therefore less suited for logging to GeoPulse.
+> [!TIP]
+> Please note that using a person entity will not report speed (and battery) information and is therefore less suited for logging to GeoPulse.  
 
 ## Usage
 
 After installation and setup:
 
 - The integration will report observed location changes for the configured monitored entity.
-- It exposes a sensor entity representing the last time GeoPulse was updated.
 - The integration can be edited from the Home Assistant UI via the integration options.
+### Exposed sensors
+-  `Last reported`: Represents the last time GeoPulse was updated.
+-  `Health`: Shows the health of the GeoPulse system (using the public /api/health endpoint)
+-  `Update`: Update entity showing the version and update information (using the public /api/version/status endpoint)
+
 

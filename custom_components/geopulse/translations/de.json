@@ -6,7 +6,7 @@
         "description": "GeoPulse einstellen",
         "data": {
           "token": "GeoPulse token",
-          "api_url": "GeoPulse API URL",
+          "geopulse_url": "GeoPulse basis URL",
           "monitored_device": "Gerät oder Person, die überwacht werden soll"
         }
       }

@@ -6,7 +6,7 @@
         "description": "Set up GeoPulse",
         "data": {
           "token": "GeoPulse token",
-          "api_url": "GeoPulse API URL",
+          "geopulse_url": "GeoPulse base URL",
           "monitored_device": "Device or person to monitor"
         }
       }

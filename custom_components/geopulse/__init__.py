@@ -9,7 +9,7 @@ from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.util import dt as dt_util
 
-from .const import CONF_API_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
+from .const import CONF_GEOPULSE_URL, CONF_MONITORED_DEVICE, CONF_TOKEN, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,7 +24,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
 
     token = entry.options.get(CONF_TOKEN, entry.data.get(CONF_TOKEN))
-    api_url = entry.options.get(CONF_API_URL, entry.data.get(CONF_API_URL))
+    api_url = entry.options.get(CONF_GEOPULSE_URL, entry.data.get(CONF_GEOPULSE_URL))
+    api_url = api_url.rstrip("/") + "/api/homeassistant"
     monitored_device = entry.options.get(CONF_MONITORED_DEVICE, entry.data.get(CONF_MONITORED_DEVICE))
     session = async_get_clientsession(hass)
 
@@ -32,10 +33,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.warning("GeoPulse entry is missing required configuration")
         return True
 
-    # Forward setup to platforms (sensor)
+    # Forward setup to platforms (sensor, update)
     try:
         hass.async_create_task(
-            hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+            hass.config_entries.async_forward_entry_setups(entry, ["sensor", "update"])
         )
     except Exception:  # pragma: no cover - defensive
         _LOGGER.exception("Failed to forward entry setup to platforms")

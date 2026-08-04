@@ -1,9 +1,17 @@
 """Sensor platform for GeoPulse."""
 
+import logging
+from datetime import timedelta
+
+from aiohttp import ClientError, ClientResponseError, ClientTimeout
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
-from .const import DOMAIN, CONF_MONITORED_DEVICE
+from .const import CONF_GEOPULSE_URL, DOMAIN, CONF_MONITORED_DEVICE
+
+_LOGGER = logging.getLogger(__name__)
+SCAN_INTERVAL = timedelta(minutes=10)
 
 
 class GeoPulseLastReportSensor(SensorEntity):
@@ -102,12 +110,87 @@ class GeoPulseLastReportSensor(SensorEntity):
         self.hass.loop.call_soon_threadsafe(self.async_write_ha_state)
 
 
+class GeoPulseHealthSensor(SensorEntity):
+    """Sensor that shows the health status of the GeoPulse API."""
+
+    def __init__(self, hass, entry_id, api_url):
+        """Initialize the sensor."""
+        self.hass = hass
+        self._entry_id = entry_id
+        self._api_url = api_url.rstrip("/")
+        self._attr_name = "GeoPulse Health"
+        self._unique_id = f"{entry_id}_health"
+        self._state = None
+        self._message = None
+        self._database = None
+        self._status = None
+
+    @property
+    def name(self):
+        return self._attr_name
+
+    @property
+    def unique_id(self):
+        return self._unique_id
+
+    @property
+    def state(self):
+        return self._status
+
+    @property
+    def extra_state_attributes(self):
+        """Return the state attributes."""
+        return {
+            "message": self._message,
+            "database": self._database,
+            "status": self._status,
+        }
+
+    async def async_update(self):
+        """Fetch health data from GeoPulse API."""
+        session = async_get_clientsession(self.hass)
+        url = f"{self._api_url}/api/health"
+
+        try:
+            async with session.get(
+                url,
+                headers={
+                    "Content-Type": "application/json",
+                },
+                timeout=ClientTimeout(total=10),
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self._message = data.get("message")
+                    health_data = data.get("data", {})
+                    self._database = health_data.get("database")
+                    self._status = health_data.get("status")
+                else:
+                    self._status = f"HTTP {response.status}"
+                    self._message = "Error"
+                    self._database = None
+        except (ClientError, ClientResponseError, Exception) as e:
+            self._status = "Error"
+            self._message = str(e)
+            self._database = None
+
+    _attr_should_poll = True
+    _attr_update_interval = SCAN_INTERVAL
+
+
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up GeoPulse sensors from a config entry."""
     monitored_device = entry.options.get(CONF_MONITORED_DEVICE, entry.data.get(CONF_MONITORED_DEVICE))
-    if not monitored_device:
-        async_add_entities([], True)
-        return
+    api_url = entry.options.get(CONF_GEOPULSE_URL, entry.data.get(CONF_GEOPULSE_URL))
 
-    sensor = GeoPulseLastReportSensor(hass, entry.entry_id, monitored_device)
-    async_add_entities([sensor], True)
+    sensors = []
+
+    if monitored_device:
+        sensor = GeoPulseLastReportSensor(hass, entry.entry_id, monitored_device)
+        sensors.append(sensor)
+
+    if api_url:
+        health_sensor = GeoPulseHealthSensor(hass, entry.entry_id, api_url)
+        sensors.append(health_sensor)
+
+    async_add_entities(sensors, True)
