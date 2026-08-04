@@ -47,8 +47,8 @@ Restart Home Assistant after installation.
    - `Geopulse URL`: the base URL of your GeoPulse instance (eg. https://geopulse.mydomain.com, not https://geopulse.mydomain.com/api/homeassistant)
    - `device or entity`: Select the monitored device or person entity.
 
-| :exclamation:  Please note that using a person entity will not report speed (and battery) information and is therefore less suited for logging to GeoPulse.  |
-|----------------------------------------------|
+> [!TIP]
+> Please note that using a person entity will not report speed (and battery) information and is therefore less suited for logging to GeoPulse.  
 
 ## Usage
 
