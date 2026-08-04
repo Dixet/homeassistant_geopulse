@@ -1,0 +1,15 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "GeoPulse",
+        "description": "GeoPulse instellen",
+        "data": {
+          "token": "GeoPulse token",
+          "api_url": "GeoPulse API URL",
+          "monitored_device": "Apparaat of persoon om te monitoren"
+        }
+      }
+    }
+  }
+}
