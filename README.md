@@ -1,3 +1,9 @@
+> [!IMPORTANT]  
+> **This integration will be discontinued shortly. GeoPulse now has its own native Home Assistant integration available at https://github.com/tess1o/geopulse-homeassistant**
+> **Please install the official integration and remove this custom component from your installation**
+> **No updates or bugfixes will be provided anymore**
+
+
 <H3><img alt="GeoPulse icon" src="https://github.com/user-attachments/assets/90fa1384-2525-43a0-8ace-ac5194251a69" style="height: 3em; vertical-align: middle;"/>
 GeoPulse Home Assistant Integration</H3>
 
